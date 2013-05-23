@@ -24,28 +24,6 @@ void handler(int signum) {
 		write(STDOUT_FILENO,procsmote,sizeof(procsmote));
 	}
 }
-
-void printarray(char**stringar) {
-	int arlen = sizeof(stringar)/sizeof(char*);
-	int i;
-	printf("[");
-	for(i = 0; i < arlen; i++) {
-		//write(STDOUT_FILENO,stringar[i],sizeof(stringar[i]));
-		printf("%s,",stringar[i]);
-	}
-	printf("]\n");
-}
-
-void contain(char*test) {
-	int len = mystrlen(test);
-	int i = 0;
-	for(i=0; i < len; i++) {
-		if(test[i] == '\n') {
-			printf("New Line found");
-		}
-	}
-}
-
 int mystrlen(char* astring) {
 	int i=0;
 	while(astring[i] != '\0') {
@@ -55,6 +33,7 @@ int mystrlen(char* astring) {
 	return i;
 }
 
+//based on function shown by daveti in lab section
 void parsecommand(char* input, char** cmd,char**args) {
 	char* placeholder = input;
 	char* placeholderhead = input;
@@ -88,23 +67,7 @@ void parsecommand(char* input, char** cmd,char**args) {
 		}
 	}
 	
-	//strip path from command
-	
-	int lastslash = NULL;
-	int j;
-	for(j =0; j<size; j++)
-	{
-		if(args[0][j] == '/') {
-			lastslash = j;
-		}
-	}
-	char* simplecommand = malloc(size-lastslash);
-	for(j =0; j < size-lastslash-1; j++)
-	{
-		simplecommand[j] = args[0][lastslash+j+1];
-	}
-	args[0] = simplecommand;
-	
+	args[numberofparam] = NULL;
 }
 
 int main(int argc, char **argv) {
@@ -118,8 +81,6 @@ int main(int argc, char **argv) {
 		waittime = atoi(argv[1]); 
 	}
 	signal(SIGALRM,handler);
-	//alarm(1);
-	//while(1);
 	writeprompt();
 	while(1) {
 		int numread = read(STDIN_FILENO,inputbuffer,1024);
@@ -130,12 +91,8 @@ int main(int argc, char **argv) {
 		}
 		inputbuffer[numread] = '\0';
 		parsecommand(inputbuffer,&newcmd,newargv);
-		contain(newcmd);
-		contain(newargv[0]);
 		pid = fork();
 		if(!pid) {
-			//printarray(newargv);
-			//printf("\ncommand: %s\n",newcmd);
 			execve(newcmd,newargv,newenviron); 
 			perror("execve failed");
 			_exit(0);
@@ -149,6 +106,7 @@ int main(int argc, char **argv) {
 			wait(pid);
 			writeprompt();
 		}
+		free( newcmd);
 	}
 	
 }

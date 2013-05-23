@@ -1,0 +1,27 @@
+Aaron Elligsen
+File:
+sshell.c
+sysHello.c
+Hello.c
+
+Extra Credit:
+I implemented the command parser based on the one Daveti showed in lab lecture.
+
+Compilation instructions:
+Make works
+
+Overview
+1. Working shell
+2. Shell will kill process which go over the time out
+3. Shell will print messages based on success or failure of the process
+4. Implemented the basic hello world system call
+5. Compiled and updated the kernel
+6. ran test program to show that kernel call was working
+
+Description of code:
+I have the shell code running using just a couple functions. 
+The hello sys call is nothing unusual. 
+
+Hour Required: 5-8 depending on how you want to count compile time
+Effort required: Fairly minimal, I thought the assignment was pretty straight forward. 
+
